@@ -1,0 +1,24 @@
+groups:
+  - name: incident-rag-demo
+    rules:
+      - alert: RAGErrorRateHigh
+        expr: (sum(rate(rag_requests_total{status="error"}[5m])) / clamp_min(sum(rate(rag_requests_total[5m])), 0.001) > 0.05) and (sum(increase(rag_requests_total[5m])) >= 20)
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "RAG error rate exceeds illustrative 5% threshold"
+      - alert: RAGLatencyHigh
+        expr: (histogram_quantile(0.95, sum by (le) (rate(rag_request_duration_seconds_bucket[5m]))) > 15) and (sum(increase(rag_requests_total[5m])) >= 20)
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "RAG p95 exceeds illustrative 15-second threshold"
+      - alert: RAGFallbackActive
+        expr: sum(increase(rag_fallbacks_total[10m])) >= 3
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "RAG is repeatedly falling back from a component"

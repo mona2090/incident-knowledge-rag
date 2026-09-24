@@ -1,0 +1,12 @@
+[
+  {
+    "source_id": "RB-001",
+    "title": "Investigating Kafka consumer lag and rebalances",
+    "service": "orders-consumer",
+    "environment": "production",
+    "technology": "kafka",
+    "document_type": "runbook",
+    "approval_status": "approved",
+    "content": "Investigation: compare lag growth with deployment timestamps. Inspect consumer logs for poll interval expiration and repeated rebalances. Compare batch processing duration with max.poll.interval.ms. Check downstream service latency, consumer instance count, and partition assignment. If evidence links the regression to a deployment, discuss rollback with the incident commander. Do not change production configuration without approval. Prevention: load-test processing duration and alert on sustained lag and rebalance frequency."
+  }
+]

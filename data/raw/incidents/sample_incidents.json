@@ -1,0 +1,42 @@
+[
+  {
+    "source_id": "INC-001",
+    "title": "Payments API exhausted PostgreSQL connections",
+    "service": "payments-api",
+    "environment": "production",
+    "technology": "postgresql",
+    "document_type": "incident",
+    "approval_status": "approved",
+    "content": "Symptoms: payment requests returned HTTP 500 and logs reported remaining connection slots are reserved. Confirmed root cause: an application release failed to close database connections on an exception path. Evidence: active connections rose after deployment and application traces showed unreleased connections. Mitigation performed: the on-call team rolled back the release. Long-term fix: close connections reliably and add connection-pool saturation alerts."
+  },
+  {
+    "source_id": "INC-002",
+    "title": "Orders consumer lag increased after deployment",
+    "service": "orders-consumer",
+    "environment": "production",
+    "technology": "kafka",
+    "document_type": "incident",
+    "approval_status": "approved",
+    "content": "Symptoms: Kafka consumer lag increased after deployment and the consumer group repeatedly rebalanced. Confirmed root cause: synchronous enrichment calls increased batch processing time beyond max.poll.interval.ms. Evidence: processing duration exceeded the poll interval and consumer logs showed poll interval expiration. Mitigation performed: the team rolled back the enrichment change. Long-term fix: reduce processing time, bound external-call timeouts, and tune batch size using load tests."
+  },
+  {
+    "source_id": "INC-003",
+    "title": "Draft diagnosis of orders consumer lag",
+    "service": "orders-consumer",
+    "environment": "production",
+    "technology": "kafka",
+    "document_type": "incident",
+    "approval_status": "draft",
+    "content": "Unreviewed hypothesis: consumer lag and repeated rebalancing might be caused by an undersized max.poll.interval.ms. This draft proposes changing the interval, but processing-duration evidence has not been collected. The diagnosis and proposed change have not been approved."
+  },
+  {
+    "source_id": "INC-004",
+    "title": "Orders consumer lag during staging network experiment",
+    "service": "orders-consumer",
+    "environment": "staging",
+    "technology": "kafka",
+    "document_type": "incident",
+    "approval_status": "approved",
+    "content": "Symptoms: orders consumer lag increased during a staging experiment. Confirmed root cause: injected network delay slowed broker communication. Evidence: the delay matched the fault-injection window. Resolution: the team ended the staging experiment. This incident does not describe the production deployment."
+  }
+]
